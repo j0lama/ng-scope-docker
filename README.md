@@ -8,7 +8,7 @@ A precompiled NG-Scope docker image can be used to run NG-Scope anywhere. Use *j
 ```
 
 # Compile your own NG-Scope image
-In case you want to build modify NG-Scope and build your own docker image, just go into the docker/ directory and run the following:
+In case you want to modify NG-Scope and build your own docker image, just go into the docker/ directory and run the following:
 ```bash
 ./build.sh -n <Image name>
 ```
