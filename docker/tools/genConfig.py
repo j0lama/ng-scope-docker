@@ -43,11 +43,11 @@ def getUSRPs():
         output = subprocess.check_output('uhd_find_devices', shell=True).strip().decode()
     except Exception as e:
         output = ''
-    return parseUSRPOutput(output)
+    return parseUSRPOutput(output) # List of USRPs in the system
 
 def genRFConfig(earfcn, usrpID):
     tmp = rf_cfg_tpl.copy()
-    freq = earfcn2freq(earfcn)
+    freq = earfcn2freq(int(earfcn))
     if freq == None:
         print('Invalid EARFCN {0}'.format(earfcn))
         exit(1)
@@ -56,19 +56,17 @@ def genRFConfig(earfcn, usrpID):
     
     return tmp
 
-def genConfig(rfNum, earfcns):
-    cfg_tpl['nof_rf_dev'] = rfNum
-    
+def genConfig(earfcns):    
     usrps = getUSRPs()
-    if len(usrps) < rfNum:
-        raise Exception('ERROR: Not enough available USRPs (avail: {0}, req: {1})'.format(len(usrps), rfNum))
+    if len(usrps) < len(earfcns):
+        raise Exception('ERROR: Not enough available USRPs (avail: {0}, req: {1})'.format(len(usrps), len(earfcns)))
     
     # Populate main structure
-    cfg_tpl['nof_rf_dev'] = rfNum
+    cfg_tpl['nof_rf_dev'] = len(earfcns)
     
     # Add RFs
-    for i in range(rfNum):
-        cfg_tpl['rf_config{0}'.format(i)] = genRFConfig(earfcns, usrps[i])
+    for i in range(len(earfcns)):
+        cfg_tpl['rf_config{0}'.format(i)] = genRFConfig(earfcns[i], usrps[i])
 
     # Generate file
     out = dumps(cfg_tpl)
@@ -83,15 +81,15 @@ def safeConfig(cfg, output):
         f.write(cfg)
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print('USAGE: {0} <RF Number> <Earfcn> <Output file>'.format(sys.argv[0]))
+    if len(sys.argv) < 3:
+        print('USAGE: {0} <Output file> <Earfcn List>'.format(sys.argv[0]))
         sys.exit(1)
     
     try:
-        cfg = genConfig(int(sys.argv[1]), int(sys.argv[2]))
+        cfg = genConfig(sys.argv[2:])
     except Exception as e:
         print(e)
         sys.exit(1)
     
-    safeConfig(cfg, sys.argv[3])
+    safeConfig(cfg, sys.argv[1])
     
