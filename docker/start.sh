@@ -12,7 +12,5 @@ if [ $RET != 0 ]; then
     exit 1
 fi
 
-cat config.cfg
-
 ./ngscope > /dev/null
-./ngscope -c config.cfg -s logs/sibs.dump -o logs/dci_output/
+./ngscope -c config.cfg -s logs/sibs/ -o logs/dci_output/
