@@ -15,7 +15,8 @@ cfg_tpl = {
     # RF Config
     'dci_log_config': {
         'lod_dl': True,
-        'log_ul': True
+        'log_ul': True,
+        'log_interval': 200,
     }
 }
 
