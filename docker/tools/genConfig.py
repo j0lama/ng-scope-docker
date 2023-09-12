@@ -57,13 +57,17 @@ def genRFConfig(earfcn, usrpID):
     
     return tmp
 
-def genConfig(earfcns):    
+def genConfig(frag, earfcns):    
     usrps = getUSRPs()
     if len(usrps) < len(earfcns):
         raise Exception('ERROR: Not enough available USRPs (avail: {0}, req: {1})'.format(len(usrps), len(earfcns)))
     
     # Populate main structure
     cfg_tpl['nof_rf_dev'] = len(earfcns)
+    if frag == 'yes':
+        cfg_tpl['dci_log_config']['log_interval'] = 200
+    else:
+        cfg_tpl['dci_log_config']['log_interval'] = 0
     
     # Add RFs
     for i in range(len(earfcns)):
@@ -82,15 +86,15 @@ def safeConfig(cfg, output):
         f.write(cfg)
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print('USAGE: {0} <Output file> <Earfcn List>'.format(sys.argv[0]))
+    if len(sys.argv) < 4:
+        print('USAGE: {0} <Fragmentation (yes/no)> <Output file> <Earfcn List>'.format(sys.argv[0]))
         sys.exit(1)
     
     try:
-        cfg = genConfig(sys.argv[2:])
+        cfg = genConfig(sys.argv[1], sys.argv[3:])
     except Exception as e:
         print(e)
         sys.exit(1)
     
-    safeConfig(cfg, sys.argv[1])
+    safeConfig(cfg, sys.argv[2])
     
