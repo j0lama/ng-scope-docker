@@ -63,12 +63,12 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Cheking arguments
-if [[ -z "$IMAGE" ]]; then
-    echo "Error: Image name argument missing"
-    echo "Execute '$0 --help' for more help"
-    exit 1
-fi
+# Checking arguments
+#if [[ -z "$IMAGE" ]]; then
+#    echo "Error: Image name argument missing"
+#    echo "Execute '$0 --help' for more help"
+#    exit 1
+#fi
 if [[ -z "$EARFCN" ]]; then
     echo "Error: List of EARFCN missing"
     echo "Execute '$0 --help' for more help"
