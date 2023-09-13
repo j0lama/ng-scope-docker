@@ -25,6 +25,7 @@ Help() {
 
 FRAG=0
 TIMEOUT=0
+IMAGE=ngscope
 while [[ $# -gt 0 ]]; do
   case $1 in
     -i|--image)
