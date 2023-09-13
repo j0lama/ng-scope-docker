@@ -23,7 +23,8 @@ Help() {
     exit 1
 }
 
-FRAG="no"
+FRAG=0
+TIMEOUT=0
 while [[ $# -gt 0 ]]; do
   case $1 in
     -i|--image)
@@ -32,8 +33,9 @@ while [[ $# -gt 0 ]]; do
       shift # past value
       ;;
     -f|--frag)
-      FRAG="yes"
+      FRAG=$2
       shift # past argument
+      shift # past value
       ;;
     -e|--earfcn)
       EARFCN=$2
@@ -44,6 +46,11 @@ while [[ $# -gt 0 ]]; do
       OUTPUT=$2
       shift # past argument
       shift # past value
+      ;;
+    -t|--timeout)
+      TIMEOUT=$2
+      shift
+      shift
       ;;
     -h|--help)
       Help
@@ -67,8 +74,12 @@ if [[ -z "$EARFCN" ]]; then
     exit 1
 fi
 
-docker run -e HOST_HOSTNAME=`hostname` --name ng-scope -ti --privileged --rm -v $(pwd):/ng-scope/build/ngscope/src/logs/ $IMAGE ./start.sh $FRAG $(echo "$EARFCN" | tr -d '"')
+LOGS=$(realpath $OUTPUT)
+echo $LOGS
 
-if [[ ! -z "$OUTPUT" ]]; then
-    mv logs/ $OUTPUT
-fi
+#docker run -e HOST_HOSTNAME=`hostname` --name ng-scope -ti --privileged --rm -v $LOGS:/ng-scope/build/ngscope/src/logs/ $IMAGE ./start.sh $FRAG $(echo "$EARFCN" | tr -d '"')
+docker run -e HOST_HOSTNAME=`hostname` --name ng-scope -ti --privileged -v /dev:/dev -v /proc:/proc --rm -v $LOGS:/ng-scope/build/ngscope/src/logs/ $IMAGE python3 start.py -f $FRAG -t $TIMEOUT -e $(echo "$EARFCN" | tr -d '"')
+
+#if [[ ! -z "$OUTPUT" ]]; then
+#    mv logs/ $OUTPUT
+#fi
