@@ -11,7 +11,7 @@ RUN apt install -y libuhd-dev uhd-host
 # Install libasn
 RUN git clone https://github.com/j0lama/libasn.git
 WORKDIR libasn
-RUN make -j$(nproc)
+RUN make -j$(nproc --ignore=1)
 RUN make install
 WORKDIR ../
 
@@ -24,7 +24,7 @@ WORKDIR ng-scope/
 RUN mkdir build
 WORKDIR build/
 RUN cmake ../
-RUN make -j$(nproc)
+RUN make -j$(nproc --ignore=1)
 WORKDIR ngscope/src/
 RUN mkdir logs
 

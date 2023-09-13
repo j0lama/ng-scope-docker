@@ -1,3 +1,6 @@
+import os.path
+import pathlib
+
 lte_bands = [
     {
         'band': 1,
@@ -613,7 +616,18 @@ lte_bands = [
         },
     ]
 
+missing_earfcns = {}
+path = pathlib.Path(__file__).parent.resolve()
+with open(os.path.join(path, 'missing-earfcns.csv')) as f:
+    for line in f:
+        earfcn, freq = line.strip().split(',')
+        earfcn = int(earfcn)
+        freq = float(freq)
+        missing_earfcns[earfcn] = freq
+
 def earfcn2freq(dl_earfcn):
+    if dl_earfcn in missing_earfcns:
+        return missing_earfcns[dl_earfcn]
     for band in lte_bands:
         if 18000 <= dl_earfcn < 36000:
             if band['NUL_Min'] <= dl_earfcn <= band['NUL_Max']:
