@@ -30,4 +30,5 @@ RUN mkdir logs
 
 # Copy tools
 COPY tools/* .
-COPY start.sh .
+#COPY start.sh .
+#COPY tools/start.py .

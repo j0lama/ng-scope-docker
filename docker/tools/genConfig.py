@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 import subprocess
-import sys
+from argparse import ArgumentParser
+from collections.abc import Iterable
+
 from libconf import *
 from arfcn_calc import earfcn2freq
   
@@ -85,16 +87,24 @@ def safeConfig(cfg, output):
     with open(output, 'w') as f:
         f.write(cfg)
 
-if __name__ == '__main__':
-    if len(sys.argv) < 4:
-        print('USAGE: {0} <Fragmentation (yes/no)> <Output file> <Earfcn List>'.format(sys.argv[0]))
-        sys.exit(1)
-    
+def generate_and_write(fragment, output, earfcns):
+    cfg = genConfig(fragment, earfcns)
+    safeConfig(cfg, output)
+
+def main():
+    parser = ArgumentParser()
+    parser.add_argument('fragment', type=int)
+    parser.add_argument('output')
+    parser.add_argument('earfcns', type=int, nargs='+')
+    args = parser.parse_args()
+
     try:
-        cfg = genConfig(sys.argv[1], sys.argv[3:])
+        generate_and_write(args.fragment, args.output, args.earfcns)
     except Exception as e:
         print(e)
         sys.exit(1)
-    
-    safeConfig(cfg, sys.argv[2])
-    
+
+    safeConfig(cfg, args.output)
+
+if __name__ == '__main__':
+    main()
