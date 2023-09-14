@@ -9,7 +9,7 @@ Usage: ./ng-scope.sh [Options...]
   -o, --out  <Output folder>      Output folder (will create if it does not exist)
   -f, --frag  <Seconds>           Enable log fragmentation with <Seconds> per log file
   -e, --earfcn "<EARFCN List>"    List of EARFCN (Use quotes)
-  -t, --timeout <Time>         Stop NG-Scope after <Time> of runtime
+  -t, --timeout <Time>            Stop NG-Scope after <Time> of runtime
   -h, --help                      Show help menu
 Examples:
   ./ng-scope.sh --image j0lama/ng-scope:latest --earfcn "700"
