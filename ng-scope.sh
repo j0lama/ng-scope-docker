@@ -1,25 +1,19 @@
 #!/bin/bash
 
 Help() {
-    echo "Usage:   $0 <NG-Scope Image name> <EARFCN List>"
-    echo "Example: $0 j0lama/ng-scope:latest 700"
-    echo "Example: $0 j0lama/ng-scope:latest 700 300"
-    echo
-    exit 1
-}
-
-Help() {
     echo "Usage: $0 [Options...]" >&2
     echo "  -i, --image <Image name>        Name of the Docker image (e.g. j0lama/ng-scope:latest)"
-    echo "  -o, --out  <Output folder>      Name of the Docker image (e.g. j0lama/ng-scope:latest)"
-    echo "  -f, --frag                      Enable log fragmentation"
+    echo "  -o, --out  <Output folder>      Output folder (will create if it does not exist)"
+    echo "  -f, --frag  <Seconds>           Enable log fragmentation with <seconds> per log file"
     echo "  -e, --earfcn \"<EARFCN List>\"    List of EARFCN (Use quotes)"
+    echo "  -t, --timeout <Seconds>         Stop NG-Scope after <seconds> of runtime"
     echo "  -h, --help                      Show help menu"
     echo "Examples:"
     echo "  $0 --image j0lama/ng-scope:latest --earfcn \"700\""
     echo "  $0 --image j0lama/ng-scope:latest --earfcn \"700 300\""
-    echo "  $0 --image j0lama/ng-scope:latest --frag --earfcn \"700 300\""
-    echo "  $0 --image j0lama/ng-scope:latest --frag --earfcn \"700 300\" --out enb_logs"
+    echo "  $0 --image j0lama/ng-scope:latest --frag 200 --earfcn \"700 300\""
+    echo "  $0 --image j0lama/ng-scope:latest --frag 200 --earfcn \"700 300\" --out enb_logs"
+    echo "  $0 --image j0lama/ng-scope:latest --frag 200 --earfcn \"700 300\" --out enb_logs --timeout 60"
     exit 1
 }
 
