@@ -19,7 +19,7 @@ Help() {
 
 FRAG=0
 TIMEOUT=0
-IMAGE=ngscope
+IMAGE=princetonpaws/ng-scope:22.04
 while [[ $# -gt 0 ]]; do
   case $1 in
     -i|--image)
