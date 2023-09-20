@@ -2,4 +2,4 @@
 cd docker || exit
 sudo docker build -t ngscope .
 cd ..
-sudo ln -s $(pwd)/ngscope.sh /usr/local/bin/ngscope-docker
+sudo ln -s $(pwd)/ng-scope.sh /usr/local/bin/ngscope-docker
