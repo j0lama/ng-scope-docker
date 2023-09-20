@@ -1,11 +1,14 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
 # Install dependencies
 RUN apt update -y
-RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt install -y software-properties-common build-essential cmake libfftw3-dev libmbedtls-dev libboost-program-options-dev libconfig++-dev libsctp-dev git nano python3-pip lsof
+RUN apt install -y software-properties-common build-essential cmake libfftw3-dev libmbedtls-dev libboost-program-options-dev libconfig++-dev libsctp-dev git nano python3-pip lsof
 RUN pip3 install libconf google-cloud-storage
 # Install USRP drivers
-RUN add-apt-repository ppa:ettusresearch/uhd
+#RUN add-apt-repository ppa:ettusresearch/uhd
 RUN apt install -y libuhd-dev uhd-host
 
 # Install libasn
