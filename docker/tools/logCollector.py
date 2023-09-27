@@ -15,7 +15,7 @@ def pushFileGoogleStorage(local_path, name):
     # https://saturncloud.io/blog/how-to-upload-a-file-to-google-cloud-storage-on-python-3/
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./storage.json"
     client = storage.Client()
-    bucket = client.bucket("ngscope")
+    bucket = client.bucket("ng-scope-cosmos")
     blob = bucket.blob(name)
     blob.upload_from_filename(local_path)
 
@@ -45,10 +45,10 @@ def main(folder, location, exp_name):
             zip_file = os.path.splitext(os.path.basename(log))[0]+'.zip'
             compressFile(log, zip_file)
             if 'sibs' in log:
-                storage_path = '{0}/{1}/{2}/sibs/{3}'.format(location, exp_name, date_text, zip_file)
+                storage_path = '{0}/{1}/{2}/sibs/{3}'.format(exp_name, location, date_text, zip_file)
                 pushFileGoogleStorage(zip_file, storage_path)
             else:
-                storage_path = '{0}/{1}/{2}/dci/{3}'.format(location, exp_name, date_text, zip_file)
+                storage_path = '{0}/{1}/{2}/dci/{3}'.format(exp_name, location, date_text, zip_file)
                 pushFileGoogleStorage(zip_file, storage_path)
             uploaded.add(log)
         time.sleep(SLEEP_TIME)

@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 
 import subprocess
-from argparse import ArgumentParser
-from collections.abc import Iterable
-
+import sys
 from libconf import *
 from arfcn_calc import earfcn2freq
   
@@ -66,10 +64,7 @@ def genConfig(frag, earfcns):
     
     # Populate main structure
     cfg_tpl['nof_rf_dev'] = len(earfcns)
-    if frag == 'yes':
-        cfg_tpl['dci_log_config']['log_interval'] = 200
-    else:
-        cfg_tpl['dci_log_config']['log_interval'] = 0
+    cfg_tpl['dci_log_config']['log_interval'] = int(frag)
     
     # Add RFs
     for i in range(len(earfcns)):
@@ -87,24 +82,15 @@ def safeConfig(cfg, output):
     with open(output, 'w') as f:
         f.write(cfg)
 
-def generate_and_write(fragment, output, earfcns):
-    cfg = genConfig(fragment, earfcns)
-    safeConfig(cfg, output)
-
-def main():
-    parser = ArgumentParser()
-    parser.add_argument('fragment', type=int)
-    parser.add_argument('output')
-    parser.add_argument('earfcns', type=int, nargs='+')
-    args = parser.parse_args()
-
+if __name__ == '__main__':
+    if len(sys.argv) < 4:
+        print('USAGE: {0} <Fragmentation (yes/no)> <Output file> <Earfcn List>'.format(sys.argv[0]))
+        sys.exit(1)
+    
     try:
-        generate_and_write(args.fragment, args.output, args.earfcns)
+        cfg = genConfig(sys.argv[1], sys.argv[3:])
     except Exception as e:
         print(e)
         sys.exit(1)
-
-    safeConfig(cfg, args.output)
-
-if __name__ == '__main__':
-    main()
+    
+    safeConfig(cfg, sys.argv[2])
