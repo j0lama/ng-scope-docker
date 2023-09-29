@@ -53,8 +53,27 @@ def main(folder, location, exp_name):
             uploaded.add(log)
         time.sleep(SLEEP_TIME)
 
+def upload_all(folder, location, exp_name):
+    now = datetime.now()
+    date_text = now.strftime("%b_%d_%Y-%H_%M_%S")
+    logs = [f for f in glob.iglob('{0}/**/*'.format(folder), recursive=True) if os.path.isfile(f)]
+    for log in logs:
+        print('Compressing {0}'.format(log))
+        zip_file = os.path.splitext(os.path.basename(log))[0]+'.zip'
+        compressFile(log, zip_file)
+        if 'sibs' in log:
+            storage_path = '{0}/{1}/{2}/sibs/{3}'.format(exp_name, location, date_text, zip_file)
+            pushFileGoogleStorage(zip_file, storage_path)
+        else:
+            storage_path = '{0}/{1}/{2}/dci/{3}'.format(exp_name, location, date_text, zip_file)
+            pushFileGoogleStorage(zip_file, storage_path)
+    print('All logs compressed and uploaded!')
+
 if __name__ == '__main__':
     if len(sys.argv) != 4:
         print('USAGE: python3 {0} <Folder> <Location> <experiment_name>'.format(sys.argv[0]))
         exit(1)
-    main(sys.argv[1], sys.argv[2], sys.argv[3])
+    if 'UPLOAD_ALL' in os.environ:
+        upload_all(sys.argv[1], sys.argv[2], sys.argv[3])
+    else:
+        main(sys.argv[1], sys.argv[2], sys.argv[3])
