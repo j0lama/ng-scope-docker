@@ -32,10 +32,29 @@ rf_cfg_tpl = {
 
 def parseUSRPOutput(output):
     usrps = []
-    for line in output.splitlines():
-        if 'serial' in line:
-            no_spaces = ''.join(line.split())
-            usrps.append(no_spaces.split(':')[1])
+    lines = output.splitlines()
+
+    indexes = []
+    for i, line in enumerate(lines):
+        if 'Device Address:' in line:
+            indexes.append(i)
+    indexes.append(-1)
+    
+    for i in range(len(indexes)-1):
+        start = indexes[i]
+        end = indexes[i+1]
+        args = ''
+        for line in lines[start:end]:
+            if 'serial' in line:
+                if args != '':
+                    args += ','
+                args += ''.join(line.split()).replace(':', '=')
+            if 'addr' in line:
+                if args != '':
+                    args += ','
+                args += ''.join(line.split()).replace(':', '=')
+        usrps.append(args)
+
     return usrps
 
 
@@ -46,14 +65,14 @@ def getUSRPs():
         output = ''
     return parseUSRPOutput(output) # List of USRPs in the system
 
-def genRFConfig(earfcn, usrpID):
+def genRFConfig(earfcn, usrpArgs):
     tmp = rf_cfg_tpl.copy()
     freq = earfcn2freq(int(earfcn))
     if freq == None:
         print('Invalid EARFCN {0}'.format(earfcn))
         exit(1)
     tmp['rf_freq'] = int(freq*1000000)
-    tmp['rf_args'] = 'serial={0}'.format(usrpID)
+    tmp['rf_args'] = usrpArgs
     
     return tmp
 
