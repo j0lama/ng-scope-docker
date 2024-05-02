@@ -21,6 +21,7 @@ Help() {
 FRAG=0
 TIMEOUT=0
 IMAGE=princetonpaws/ng-scope:22.04
+OUTPUT=.
 while [[ $# -gt 0 ]]; do
   case $1 in
     -i|--image)
@@ -81,8 +82,6 @@ if [[ -z "$EARFCN" ]]; then
 fi
 
 LOGS=$(realpath $OUTPUT)
-
-#docker run -e HOST_HOSTNAME=`hostname` --name ng-scope -ti --privileged --rm -v $LOGS:/ng-scope/build/ngscope/src/logs/ -v /dev:/dev -v /proc:/proc  $IMAGE python3 start.py -f $FRAG -t $TIMEOUT -e $(echo "$EARFCN" | tr -d '"')
 
 docker run -e HOST_HOSTNAME=`hostname` --name ng-scope -ti --privileged --rm -v $LOGS:/ng-scope/build/ngscope/src/logs/ -v /dev:/dev -v /proc:/proc  $IMAGE ./start.sh $FRAG $TIMEOUT $EXPERIMENT_NAME $(echo "$EARFCN" | tr -d '"')
 

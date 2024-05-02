@@ -11,13 +11,6 @@ RUN pip3 install libconf google-cloud-storage
 #RUN add-apt-repository ppa:ettusresearch/uhd
 RUN apt install -y libuhd-dev uhd-host
 
-# Install libasn
-RUN git clone https://github.com/j0lama/libasn.git
-WORKDIR libasn
-RUN make -j$(nproc --ignore=1)
-RUN make install
-WORKDIR ../
-
 # Download USRP images
 RUN /usr/lib/uhd/utils/uhd_images_downloader.py
 
